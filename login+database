@@ -1,0 +1,68 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace LoginForm
+{
+    public partial class Form1 : Form
+    {
+        public string username, password;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e) //tombol register
+        {
+            Form2 form2 = new Form2();
+            form2.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e) //tombol login
+        {
+            try
+            {
+                string myConnection = "datasource=localhost;port=3306;username=root;password=";
+                MySqlConnection myConn = new MySqlConnection(myConnection);
+                MySqlCommand SelectCommand = new MySqlCommand("select * from koneksi.data where username='" + this.textBox1.Text + "' and password='" + this.textBox2.Text + "';", myConn);
+                
+                MySqlDataReader myReader;
+                myConn.Open();
+                myReader = SelectCommand.ExecuteReader();
+                int count = 0;
+                while (myReader.Read())
+                {
+                    count = count + 1;
+                }
+                if(count == 1)
+                {
+                    MessageBox.Show("username dan password benar");
+                } else if (count > 1)
+                    {
+                    MessageBox.Show("username dan password ganda...Akses dilarang");
+                    }
+                else
+                    MessageBox.Show("username atau password salah.. Silakan coba lagi");
+                myConn.Close();
+                }
+            catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);            
+                }
+         }
+    }
+}
