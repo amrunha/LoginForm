@@ -1,0 +1,53 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace LoginForm
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        MySqlConnection koneksidb = new MySqlConnection("SERVER=localhost;DATABASE=koneksi;UID=root;PASSWORD=;"); //buat koneksi ke localhost MySql 
+        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)//tombol register
+        {
+            try
+            {
+                koneksidb.Open();
+                MySqlCommand cmd;
+                cmd = koneksidb.CreateCommand();
+                //Memasukkan data ke tabel data
+                cmd.CommandText = "INSERT INTO data (username, password) VALUES (@username, @password)";
+                //Menambahkan parameter
+                cmd.Parameters.AddWithValue("@username", textBox1.Text);
+                cmd.Parameters.AddWithValue("@password", textBox2.Text);
+                MessageBox.Show("Telah berhasil disimpan"); //Menampilkan pesan setelah berhasil disimpan
+                cmd.ExecuteNonQuery();
+                koneksidb.Close(); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
+    }
+}
